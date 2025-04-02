@@ -2,7 +2,7 @@ all:
   children:
     ubuntu:
       hosts:
-        ubuntu-server:
+        ubuntu-server:{}
     centos:
       hosts:
-        centos-server:
+        centos-server:{}
