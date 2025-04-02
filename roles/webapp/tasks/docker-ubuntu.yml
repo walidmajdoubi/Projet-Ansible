@@ -1,10 +1,10 @@
 ---
--name: update os
+- name: Update OS
   apt:
     update_cache: yes
     upgrade: dist
 
-- name: Install some package
+- name: Install required packages
   apt:
     name: "{{ item }}"
     state: present
@@ -19,26 +19,28 @@
     - apt-transport-https
     - software-properties-common
 
-- name: install docker
+- name: Install Docker
   get_url:
     url: https://get.docker.com
     dest: /tmp/get-docker.sh
     mode: 755
 
-- name: docker start deploy
+- name: Docker start deploy
   command: sh /tmp/get-docker.sh
   become: true
--name: check docker group
+
+- name: Check Docker group
   group:
     name: docker
     state: present
--name: start docker
+
+- name: Start Docker service
   service:
     name: docker
     state: started
     enabled: yes
 
--name : add user to docker group
+- name: Add user to Docker group
   user:
     name: "{{ ansible_user }}"
     groups: docker
@@ -46,9 +48,8 @@
   become: true
   notify: restart docker
 
-
-  - name: install docker-compose
+- name: Install Docker Compose
   get_url:
-    url: "https://githu.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)"
+    url: "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)"
     dest: /usr/local/bin/docker-compose
     mode: 755
