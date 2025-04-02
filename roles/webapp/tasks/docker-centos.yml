@@ -26,7 +26,6 @@
     name:
     - docker-ce
     - docker-ce-cli
-    - containerd.io
     state: latest
 
 - name: install docker-compose

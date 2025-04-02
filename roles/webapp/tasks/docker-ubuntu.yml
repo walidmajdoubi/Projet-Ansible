@@ -19,7 +19,7 @@
     - apt-transport-https
     - software-properties-common
 
-- name: installe docker
+- name: install docker
   get_url:
     url: https://get.docker.com
     dest: /tmp/get-docker.sh
