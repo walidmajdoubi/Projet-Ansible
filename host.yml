@@ -2,7 +2,17 @@ all:
   children:
     ubuntu:
       hosts:
-        ubuntu-server:{}
+        ubuntu-server:
+          ansible_host: 10.0.129.5
+          ansible_user: admin
+          ansible_password: admin
+          ansible_become: true
+          ansible_become_pass: admin
     centos:
       hosts:
-        centos-server:{}
+        centos-server:
+          ansible_host: 10.0.129.6
+          ansible_user: admin
+          ansible_password: admin
+          ansible_become: true
+          ansible_become_pass: admin
