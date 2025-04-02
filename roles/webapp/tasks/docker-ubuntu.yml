@@ -1,0 +1,54 @@
+---
+-name: update os
+  apt:
+    update_cache: yes
+    upgrade: dist
+
+- name: Install some package
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - curl
+    - python3
+    - python3-pip
+    - ca-certificates
+    - gnupg
+    - lsb-release
+    - unzip
+    - apt-transport-https
+    - software-properties-common
+
+- name: installe docker
+  get_url:
+    url: https://get.docker.com
+    dest: /tmp/get-docker.sh
+    mode: 755
+
+- name: docker start deploy
+  command: sh /tmp/get-docker.sh
+  become: true
+-name: check docker group
+  group:
+    name: docker
+    state: present
+-name: start docker
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+-name : add user to docker group
+  user:
+    name: "{{ ansible_user }}"
+    groups: docker
+    append: yes
+  become: true
+  notify: restart docker
+
+
+  - name: install docker-compose
+  get_url:
+    url: "https://githu.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)"
+    dest: /usr/local/bin/docker-compose
+    mode: 755
