@@ -4,7 +4,7 @@
   become: true
 
   vars:
-    docker_centos_repo_baseurl: "https://download.docker.com/linux/centos/{{ ansible_distribution_major_version }}/$basearch/stable"
+    docker_centos_repo_baseurl: "https://download.docker.com/linux/centos/{{ ansible_distribution_major_version }}/{{ ansible_architecture }}/stable"
     docker_compose_version: "2.24.6"
     user_to_add_to_docker_group: "{{ ansible_user }}"
 
@@ -26,7 +26,7 @@
     - name: Configurer le dépôt Docker
       yum_repository:
         name: docker-ce
-        description: Docker CE Stable - $basearch
+        description: Docker CE Stable - {{ ansible_architecture }}
         baseurl: "{{ docker_centos_repo_baseurl }}"
         enabled: yes
         gpgcheck: yes
