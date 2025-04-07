@@ -1,5 +1,5 @@
 ---
-- name: Préparation et Installation de Docker
+- name: Preparation et Installation de Docker
   hosts: all
   become: yes
   vars:
