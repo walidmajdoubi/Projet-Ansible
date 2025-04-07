@@ -1,7 +1,7 @@
 ---
-- name: Preparation et Installation de Docker
-  hosts: all
-  become: true
+# name: Preparation et Installation de Docker
+  #hosts: all
+  #become: true
 
   vars:
     docker_centos_repo_baseurl: "https://download.docker.com/linux/centos/{{ ansible_distribution_major_version }}/$basearch/stable"
