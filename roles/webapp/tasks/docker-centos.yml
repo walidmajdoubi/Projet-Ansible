@@ -1,11 +1,12 @@
 ---
 - name: Preparation et Installation de Docker
   hosts: all
-  become: yes
+  become: true
+
   vars:
     docker_centos_repo_baseurl: "https://download.docker.com/linux/centos/{{ ansible_distribution_major_version }}/$basearch/stable"
-    docker_compose_version: "2.24.6" # Version recommandée actuelle
-    user_to_add_to_docker_group: "{{ ansible_user }}" # Utilisateur Ansible par défaut
+    docker_compose_version: "2.24.6"
+    user_to_add_to_docker_group: "{{ ansible_user }}"
 
   tasks:
     - name: Installer les paquets requis
@@ -22,10 +23,10 @@
         - lvm2
         - device-mapper-persistent-data
 
-    - name: Configurer le dépôt Docker pour CentOS {{ ansible_distribution_major_version }}
+    - name: Configurer le dépôt Docker
       yum_repository:
         name: docker-ce
-        description: "Docker CE Stable - $basearch"
+        description: Docker CE Stable - $basearch
         baseurl: "{{ docker_centos_repo_baseurl }}"
         enabled: yes
         gpgcheck: yes
@@ -46,7 +47,7 @@
         dest: /usr/local/bin/docker-compose
         mode: '0755'
 
-    - name: Ajouter l'utilisateur '{{ user_to_add_to_docker_group }}' au groupe Docker
+    - name: Ajouter l'utilisateur au groupe Docker
       user:
         name: "{{ user_to_add_to_docker_group }}"
         groups: docker
