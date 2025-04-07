@@ -8,7 +8,7 @@
     #docker_compose_version: "2.24.6"
     #user_to_add_to_docker_group: "{{ ansible_user }}"
 
-  tasks:
+  tasks :
     - name: Installer les paquets requis
       package:
         name: "{{ item }}"
