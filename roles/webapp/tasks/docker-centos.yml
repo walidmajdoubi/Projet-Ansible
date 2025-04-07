@@ -1,5 +1,5 @@
 ---
-- name: Installation de Docker
+- #name: Installation de Docker
   hosts: all
   become: true
 
