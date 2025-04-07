@@ -60,14 +60,14 @@
         state: present
         executable: pip3
 
-  handlers:
-    - name: start docker
-      service:
-        name: docker
-        state: started
-        enabled: yes
+  #handlers:
+    #- name: start docker
+      #service:
+        #name: docker
+        #state: started
+        #enabled: yes
 
-    - name: restart docker
-      service:
-        name: docker
-        state: restarted
+    - #name: restart docker
+      #service:
+        #name: docker
+        #state: restarted
