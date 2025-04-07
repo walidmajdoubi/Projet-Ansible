@@ -11,7 +11,7 @@
     - name: Installer les paquets requis
       package:
         name: "{{ item }}"
-        state: present # Utiliser 'present' pour s'assurer qu'ils sont installés
+        state: present
       loop:
         - epel-release
         - wget
@@ -65,6 +65,7 @@
         name: docker
         state: started
         enabled: yes
+
     - name: restart docker
       service:
         name: docker
