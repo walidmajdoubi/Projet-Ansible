@@ -1,59 +1,70 @@
 ---
-- name: Install required packages
+- name: Préparation et Installation de Docker
   hosts: all
   become: yes
-  tasks:
+  vars:
+    docker_centos_repo_baseurl: "https://download.docker.com/linux/centos/{{ ansible_distribution_major_version }}/$basearch/stable"
+    docker_compose_version: "2.24.6" # Version recommandée actuelle
+    user_to_add_to_docker_group: "{{ ansible_user }}" # Utilisateur Ansible par défaut
 
-    - name: Install required packages
+  tasks:
+    - name: Installer les paquets requis
       package:
         name: "{{ item }}"
-        state: latest
+        state: present # Utiliser 'present' pour s'assurer qu'ils sont installés
       loop:
         - epel-release
         - wget
-        - yum-utils  # Correction du nom du package
+        - yum-utils
         - git
         - python3
         - python3-pip
         - lvm2
         - device-mapper-persistent-data
 
-    - name: Add Docker repository
+    - name: Configurer le dépôt Docker pour CentOS {{ ansible_distribution_major_version }}
       yum_repository:
-        name: docker
-        description: "Docker Repository"
-        baseurl: https://download.docker.com/linux/centos/7/x86_64/stable
+        name: docker-ce
+        description: "Docker CE Stable - $basearch"
+        baseurl: "{{ docker_centos_repo_baseurl }}"
         enabled: yes
         gpgcheck: yes
         gpgkey: https://download.docker.com/linux/centos/gpg
 
-    - name: Install Docker
+    - name: Installer Docker CE, CLI et containerd.io
       package:
         name:
           - docker-ce
           - docker-ce-cli
+          - containerd.io
         state: latest
+      notify: start docker
 
-    - name: Install Docker Compose
+    - name: Installer Docker Compose
       get_url:
-        url: "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-linux-{{ ansible_architecture }}"
+        url: "https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-linux-{{ ansible_architecture }}"
         dest: /usr/local/bin/docker-compose
         mode: '0755'
 
-    - name: Add user to docker group
+    - name: Ajouter l'utilisateur '{{ user_to_add_to_docker_group }}' au groupe Docker
       user:
-        name: "{{ ansible_user }}"
+        name: "{{ user_to_add_to_docker_group }}"
         groups: docker
         append: yes
       notify: restart docker
 
-    - name: Install Docker Python package
+    - name: Installer le package Python Docker
       pip:
         name: docker
         state: present
         executable: pip3
 
   handlers:
+    - name: start docker
+      service:
+        name: docker
+        state: started
+        enabled: yes
     - name: restart docker
       service:
         name: docker
