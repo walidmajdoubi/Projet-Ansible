@@ -68,10 +68,18 @@
     name: "{{ user_to_add_to_docker_group }}"
     groups: docker
     append: yes
-  notify: restart docker
+  notify: restart docker # You might want to change this to 'notify: start docker' as well, depending on your needs
 
 - name: Installer le package Python Docker
   pip:
     name: docker
     state: present
     executable: pip3
+
+# Define the handlers block
+handlers:
+  - name: start docker
+    service:
+      name: docker
+      state: started
+      enabled: yes
