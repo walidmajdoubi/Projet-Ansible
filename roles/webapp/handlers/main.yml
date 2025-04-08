@@ -1,7 +1,12 @@
 ---
-# handlers file for webapp
+---
+- name: start docker
+  service:
+    name: docker
+    state: started
+    enabled: yes
 
 - name: restart docker
-  systemd:
+  service:
     name: docker
     state: restarted
