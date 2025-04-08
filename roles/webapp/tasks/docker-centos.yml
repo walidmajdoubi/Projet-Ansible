@@ -77,7 +77,7 @@
     executable: pip3
 
 # Define the handlers block
-handlers:
+- handlers:
   - name: start docker
     service:
       name: docker
