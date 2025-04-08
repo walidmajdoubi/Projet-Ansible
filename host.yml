@@ -3,7 +3,7 @@ all:
     ubuntu:
       hosts:
         ubuntu-server:
-          ansible_host: 10.0.223.4
+          ansible_host: 10.0.233.4
           ansible_user: admin
           ansible_password: admin
           ansible_become: true
@@ -11,7 +11,7 @@ all:
     centos:
       hosts:
         centos-server:
-          ansible_host: 10.0.223.5
+          ansible_host: 10.0.234.5
           ansible_user: admin
           ansible_password: admin
           ansible_become: true
