@@ -17,12 +17,26 @@
   yum_repository:
     name: docker-ce
     description: Docker CE Stable - {{ ansible_architecture }}
-    baseurl: "{{ docker_centos_repo_baseurl }}"
+    baseurl: "{{ docker_centos_repo_baseurl | default('https://download.docker.com/linux/centos/$releasever/$basearch/stable') }}"
     enabled: yes
     gpgcheck: yes
     gpgkey: https://download.docker.com/linux/centos/gpg
+  when: ansible_os_family == "RedHat"
 
-- name: Installer Docker CE, CLI et containerd.io
+- name: Ajouter la clé GPG Docker pour Ubuntu
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+  when: ansible_os_family == "Debian"
+
+- name: Configurer le dépôt Docker pour Ubuntu
+  apt_repository:
+    repo: "deb [arch={{ ansible_architecture }} signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+    state: present
+    filename: docker
+  when: ansible_os_family == "Debian"
+
+- name: Installer Docker CE, CLI et containerd.io (CentOS)
   package:
     name:
       - docker-ce
@@ -30,10 +44,22 @@
       - containerd.io
     state: latest
   notify: start docker
+  when: ansible_os_family == "RedHat"
+
+- name: Installer Docker CE, CLI et containerd.io (Ubuntu)
+  apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+    state: latest
+    update_cache: yes
+  notify: start docker
+  when: ansible_os_family == "Debian"
 
 - name: Installer Docker Compose
   get_url:
-    url: "https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-linux-{{ ansible_architecture }}"
+    url: "https://github.com/docker/compose/releases/download/{{ docker_compose_version | default('v2.20.2') }}/docker-compose-linux-{{ ansible_architecture }}"
     dest: /usr/local/bin/docker-compose
     mode: '0755'
 
